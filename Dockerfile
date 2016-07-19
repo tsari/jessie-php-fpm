@@ -48,7 +48,9 @@ RUN cd /usr/src && \
     echo "extension=`find / -name "amqp.so"`" > /etc/php/7.0/mods-available/amqp.ini && \
     phpenmod amqp
 
+# this is copied from official php-fpm repo
 COPY docker.conf /etc/php/7.0/fpm/pool.d/docker.conf
+COPY zz-docker.conf /etc/php/7.0/fpm/pool.d/zz-docker.conf
 
 # Update the PHP.ini file, enable <? ?> tags and quieten logging.
 #RUN sed -i "s/short_open_tag = Off/short_open_tag = On/" /etc/php/7.0/fpm/php.ini && \
