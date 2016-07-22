@@ -30,6 +30,7 @@ RUN \
         php7.0-imagick \
         php7.0-intl \
         php7.0-memcached \
+        php7.0-mbstring \
         php7.0-pgsql \
         sudo \
     && \
