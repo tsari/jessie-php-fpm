@@ -32,6 +32,7 @@ RUN \
         php7.0-memcached \
         php7.0-mbstring \
         php7.0-pgsql \
+        php7.0-xml \
         sudo \
     && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
