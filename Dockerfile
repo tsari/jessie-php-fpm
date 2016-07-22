@@ -54,9 +54,7 @@ RUN cd /usr/src && \
 COPY docker.conf /etc/php/7.0/fpm/pool.d/docker.conf
 COPY zz-docker.conf /etc/php/7.0/fpm/pool.d/zz-docker.conf
 
-# Update the PHP.ini file, enable <? ?> tags and quieten logging.
-#RUN sed -i "s/short_open_tag = Off/short_open_tag = On/" /etc/php/7.0/fpm/php.ini && \
-#    sed -i "s/error_reporting = .*$/error_reporting = E_ERROR | E_WARNING | E_PARSE/" /etc/php/7.0/fpm/php.ini
+RUN sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/" /etc/php/7.0/fpm/php.ini
 
 #COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 #RUN chmod +x /usr/local/bin/entrypoint.sh
