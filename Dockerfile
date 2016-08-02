@@ -23,6 +23,7 @@ RUN \
     apt-get update -qq && \
     apt-get install --no-install-recommends -y \
         librabbitmq-dev \
+        locales \
         php7.0-apcu \
         php7.0-curl \
         php7.0-dev \
@@ -56,8 +57,13 @@ COPY zz-docker.conf /etc/php/7.0/fpm/pool.d/zz-docker.conf
 
 RUN sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/" /etc/php/7.0/fpm/php.ini
 
-#COPY entrypoint.sh /usr/local/bin/entrypoint.sh
-#RUN chmod +x /usr/local/bin/entrypoint.sh
+# set locales
+RUN echo "de_DE.UTF-8 UTF-8" >> /etc/locale.gen && \
+    echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen && \
+    locale-gen
+ENV LC_ALL=en_US.UTF-8
+ENV LANG=en_US.UTF-8
+ENV LANGUAGE=en_US.UTF-8
 
 EXPOSE 9000
 
