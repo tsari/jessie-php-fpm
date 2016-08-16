@@ -36,6 +36,7 @@ RUN \
         php7.0-pgsql \
         php7.0-xml \
         php-pear \
+        php-soap \
         sudo \
     && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
