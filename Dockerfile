@@ -4,6 +4,7 @@ MAINTAINER Tibor Sári <tiborsari@gmx.de>
 ENV DEBIAN_FRONTEND noninteractive
 
 ENV AMQP_VERSION=1.7.1
+ENV MAILPARSE_VERSION=3.0.1
 
 ## add dotdeb to apt sources list
 RUN echo 'deb http://packages.dotdeb.org jessie all' > /etc/apt/sources.list.d/dotdeb.list
@@ -34,21 +35,27 @@ RUN \
         php7.0-mbstring \
         php7.0-pgsql \
         php7.0-xml \
+        php-pear \
         sudo \
     && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# build and install php-amqp due to missing php7 support for php-pear (pecl)
+# install some pecl modules
+# mailparse must be pre-processed due to https://bugs.php.net/bug.php?id=71813
 RUN cd /usr/src && \
-    wget https://pecl.php.net/get/amqp-$AMQP_VERSION.tgz && \
-    tar xvf amqp-$AMQP_VERSION.tgz && \
-    cd amqp-$AMQP_VERSION && \
+    pecl download mailparse-$MAILPARSE_VERSION && \
+    tar xf mailparse-$MAILPARSE_VERSION.tgz && \
+    cd mailparse-$MAILPARSE_VERSION && \
     phpize && \
     ./configure && \
+    sed -i 's/^\(#error .* the mbstring extension!\)/\/\/\1/' mailparse.c && \
     make && \
     make install && \
-    cd /usr/src && rm -rf amqp-$AMQP_VERSION amqp-$AMQP_VERSION.tgz && \
-    echo "extension=`find / -name "amqp.so"`" > /etc/php/7.0/mods-available/amqp.ini && \
+    echo "extension=`find / -name "mailparse.so"`" > /etc/php/7.0/mods-available/mailparse.ini && \
+    phpenmod mailparse
+
+RUN pecl install amqp-$AMQP_VERSION
+RUN echo "extension=`find / -name "amqp.so"`" > /etc/php/7.0/mods-available/amqp.ini && \
     phpenmod amqp
 
 # this is copied from official php-fpm repo
