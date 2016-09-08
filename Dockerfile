@@ -34,6 +34,7 @@ RUN \
         php7.0-memcached \
         php7.0-mbstring \
         php7.0-pgsql \
+        php7.0-sqlite3 \
         php7.0-xml \
         php-imap \
         php-pear \
