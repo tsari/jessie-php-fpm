@@ -1,3 +1,3 @@
 Package: php7.0*
-Pin: version 7.0.10*
+Pin: version 7.0.13*
 Pin-Priority: 1001
