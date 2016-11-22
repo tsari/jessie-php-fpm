@@ -62,6 +62,10 @@ RUN pecl install amqp-$AMQP_VERSION
 RUN echo "extension=`find / -name "amqp.so"`" > /etc/php/7.0/mods-available/amqp.ini && \
     phpenmod amqp
 
+RUN pecl install mongodb
+RUN echo "extension=`find / -name "mongodb.so"`" > /etc/php/7.0/mods-available/mongodb.ini && \
+    phpenmod mongodb
+
 # this is copied from official php-fpm repo
 COPY docker.conf /etc/php/7.0/fpm/pool.d/docker.conf
 COPY zz-docker.conf /etc/php/7.0/fpm/pool.d/zz-docker.conf
