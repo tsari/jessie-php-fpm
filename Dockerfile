@@ -1,25 +1,10 @@
-FROM buildpack-deps:jessie
+FROM tsari/php
 MAINTAINER Tibor Sári <tiborsari@gmx.de>
-
-ENV DEBIAN_FRONTEND noninteractive
 
 ENV AMQP_VERSION=1.7.1
 ENV MAILPARSE_VERSION=3.0.1
 
-## add dotdeb to apt sources list
-RUN echo 'deb http://packages.dotdeb.org jessie all' > /etc/apt/sources.list.d/dotdeb.list
-RUN echo 'deb-src http://packages.dotdeb.org jessie all' >> /etc/apt/sources.list.d/dotdeb.list
-
-## add dotdeb key for apt
-RUN curl http://www.dotdeb.org/dotdeb.gpg | apt-key add -
-
-# pin the versions
-COPY dotdeb.pin /etc/apt/preferences.d/php
-
-# we need this for the php-fpm pid file
-VOLUME /run/php
-
-# update, install and clean up to minimize the image size
+# update, install project dependent modules and clean up to minimize the image size
 RUN \
     apt-get update -qq && \
     apt-get install --no-install-recommends -y \
@@ -40,7 +25,6 @@ RUN \
         php-imap \
         php-pear \
         php-soap \
-        sudo \
     && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
@@ -80,8 +64,8 @@ ENV LC_ALL=en_US.UTF-8
 ENV LANG=en_US.UTF-8
 ENV LANGUAGE=en_US.UTF-8
 
-EXPOSE 9000
+VOLUME /var/www
+WORKDIR /var/www
 
-# Set up the command arguments
-#ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+EXPOSE 9000
 CMD ["php-fpm7.0"]
